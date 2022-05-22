@@ -160,6 +160,30 @@ func IntValue(ptr *int) int {
 	return IntValueOrElse(ptr, 0)
 }
 
+func Float64Value(ptr *float64) float64 {
+	return Float64ValueOrElse(ptr, 0)
+}
+
+func Float64ValueOrElse(ptr *float64, value float64) float64 {
+	if ptr != nil {
+		return *ptr
+	}
+
+	return value
+}
+
+func Float32Value(ptr *float32) float32 {
+	return Float32ValueOrElse(ptr, 0)
+}
+
+func Float32ValueOrElse(ptr *float32, value float32) float32 {
+	if ptr != nil {
+		return *ptr
+	}
+
+	return value
+}
+
 func BoolPtr(value bool) *bool {
 	return &value
 }
