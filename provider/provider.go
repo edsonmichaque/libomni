@@ -2,8 +2,6 @@ package provider
 
 import "io"
 
-type Builder func() Provider
-
 type Provider interface {
 	ParseConfig(io.Reader) error
 	SendMessages(Request) Response

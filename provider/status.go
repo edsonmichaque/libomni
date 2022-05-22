@@ -21,17 +21,3 @@ type Status struct {
 	Reason      ReasonCode `json:"reason"`
 	Description string     `json:"description"`
 }
-
-var (
-	ResponseNotImplemented = Response{
-		Error: &Error{
-			Code: ErrorNotImplemented,
-		},
-	}
-
-	ResponseNotSupported = Response{
-		Error: &Error{
-			Code: ErrorNotSupported,
-		},
-	}
-)
