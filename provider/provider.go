@@ -2,13 +2,13 @@ package provider
 
 import "io"
 
-type ProviderBuilder func() Provider
+type Builder func() Provider
 
 type ConfigReader interface {
 	ParseConfig(io.Reader) error
 }
 
-type Scheduler interface {
+type MessageScheduler interface {
 	ScheduleMessages(string, Request) Response
 }
 
@@ -28,17 +28,11 @@ type Capabilities interface {
 	Capabilities() []Capability
 }
 
-type Info interface {
-	ID() string
-	Name() string
-	Version() string
-}
-
 type Provider interface {
 	ConfigReader
 	MessageSender
 	MessageQuerier
 	MessageReceiver
-	Scheduler
+	MessageScheduler
 	Capabilities
 }
