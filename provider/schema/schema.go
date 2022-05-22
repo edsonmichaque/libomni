@@ -1,33 +1,72 @@
 package schema
 
+import "encoding/json"
+
+type Properties map[string]Schema
+
 type Schema struct {
-	Type              Kind       `json:"type"`
-	Format            Format     `json:"format"`
-	Description       string     `json:"description"`
-	Properties        Properties `json:"properties"`
-	Required          []string   `json:"required"`
-	Items             []Schema   `json:"items"`
-	PatternProperties Properties `json:"patternProperties"`
+	Type              kind       `json:"type,omitempty"`
+	Format            format     `json:"format,omitempty"`
+	Description       string     `json:"description,omitempty"`
+	Properties        Properties `json:"properties,omitempty"`
+	Required          []string   `json:"required,omitempty"`
+	Items             *Schema    `json:"items,omitempty"`
+	PatternProperties Properties `json:"patternProperties,omitempty"`
+	Secret            bool       `json:"secret,omitempty"`
 }
 
-type Kind string
+type kind int
 
 const (
-	String  = Kind("string")
-	Number  = Kind("number")
-	Object  = Kind("object")
-	Boolean = Kind("boolean")
-	Array   = Kind("array")
+	String kind = iota
+	Number
+	Object
+	Boolean
+	Array
 )
 
-type Format string
+func (k kind) String() string {
+	return map[kind]string{
+		String:  "string",
+		Number:  "number",
+		Object:  "object",
+		Boolean: "boolean",
+		Array:   "array",
+	}[k]
+}
 
-const (
-	Email = Format("email")
-)
+func (k kind) MarshalJSON() ([]byte, error) {
+	return []byte(k.String()), nil
+}
 
-func (k Kind) Validate() error {
+func (k kind) UmarshalJSON(data []byte) error {
+	var value string
+
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+
+	kinds := map[string]kind{
+		"string":  String,
+		"number":  Number,
+		"object":  Object,
+		"boolean": Boolean,
+		"array":   Array,
+	}
+
+	if ks, ok := kinds[value]; ok {
+		*(&k) = ks
+	}
+
 	return nil
 }
 
-type Properties map[string]Schema
+func (k kind) Validate() error {
+	return nil
+}
+
+type format int
+
+const (
+	Email format = iota
+)
